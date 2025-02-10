@@ -97,6 +97,8 @@ hands = {
 
 def process_hand_response(data):
     """ Processes a single hand and determines the best move. """
+    global spent
+    global earned
     action = None
     dealer_value = data["spin"]["dealer"]["total_value"]
     hard_value = None
@@ -124,7 +126,19 @@ def process_hand_response(data):
                 can_split = "SPLIT" in data["spin"]["steps"].values()
                 action = optimal_blackjack_action(dealer_value, hard_value, soft_value, can_double, can_split)
                 break
-    return action
+    time.sleep(random.uniform(4, 5.5))
+    if action == "hit":
+        hit()
+    elif action == "stand":
+        stand()
+    elif action == "double":
+        double()
+    elif action == "split":
+        split()
+    else:
+        spent += data["spin"]["total_bet"]
+        earned += data["spin"]["total_win"]
+        reset()
 
 
 def hit():
@@ -178,27 +192,27 @@ def human_like_mouse_move(x, y):
     offset_x = random.randint(-10, 10)
     offset_y = random.randint(-10, 10)
 
-    duration = random.uniform(1.0,2.0)
 
     # Move with a slight curve or random path
-    steps = random.randint(5, 15)  # Number of steps for the movement
+    steps = random.randint(10, 30)  # Number of steps for the movement
     for i in range(steps):
         # Interpolate the position
         new_x = start_x + (x - start_x) * (i / steps) + offset_x * (1 - i / steps)
         new_y = start_y + (y - start_y) * (i / steps) + offset_y * (1 - i / steps)
 
         # Move to the intermediate point
-        pyautogui.moveTo(new_x, new_y, duration=random.uniform(0.05, 0.1))
+        pyautogui.moveTo(new_x, new_y, duration=random.uniform(0.02, 0.04))
 
     # Final precise move to the target
-    pyautogui.moveTo(x, y, duration=random.uniform(0.1, 0.3))
+    pyautogui.moveTo(x+random.randint(-5,5), y+random.randint(-5,5), duration=random.uniform(0.1, 0.3))
 
 def human_like_click():
     """Simulate a human-like mouse click."""
     # Simulate a slight delay before and after the click
     time.sleep(random.uniform(0.2, 0.5))
-    pyautogui.click()
-    time.sleep(random.uniform(0.1, 0.3))
+    pyautogui.mouseDown()
+    time.sleep(random.uniform(0.2, 0.5))
+    pyautogui.mouseUp()
 
 
 
@@ -209,27 +223,22 @@ def read_and_process_json():
         with open(json_file_path, "r") as json_file:
             data = json.load(json_file)
             move = process_hand_response(data)
-            print(move)
-            time.sleep(random.uniform(4,5.5))
-            if move == "hit":
-                hit()
-            elif move == "stand":
-                stand()
-            elif move == "double":
-                double()
-            elif move == "split":
-                split()
-            else:
-                reset()
+            if data["spin"]["steps"]["0"]=="DEAL":
+                print("Spent:",spent)
+                print("Earned:",earned)
+                print()
             # Add your processing logic here
     except FileNotFoundError:
         print("The file play_data.json was not found.")
     except json.JSONDecodeError:
         print("Error: The file does not contain valid JSON.")
 
+spent = 0
+earned = 0
 
 def main():
     """Wait for the JSON file to update after startup and process it once."""
+
     clear_json_file()  # Clear the file at startup
 
     # Get the modification time when the program starts
