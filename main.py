@@ -128,23 +128,46 @@ def process_hand_response(data):
 
 
 def hit():
-    human_like_mouse_move(500,500)
+    human_like_mouse_move(850,930)
     human_like_click()
 
 def stand():
-    human_like_mouse_move(500,400)
+    human_like_mouse_move(1300,930)
     human_like_click()
 
 def double():
-    human_like_mouse_move(400,500)
+    human_like_mouse_move(1000,930)
     human_like_click()
 
 def split():
-    human_like_mouse_move(400,400)
+    human_like_mouse_move(1150,930)
     human_like_click()
 
 def reset():
-    print("Bet and deal.")
+    #START
+    human_like_mouse_move(1150, 930)
+    human_like_click()
+
+
+    # PICK UP MONEY
+    human_like_mouse_move(1700, 930)
+    human_like_click()
+    # DROP MONEY
+    human_like_mouse_move(1375, 700)
+    human_like_click()
+
+    # DROP MONEY
+    human_like_mouse_move(1075, 700)
+    human_like_click()
+
+    # DROP MONEY
+    human_like_mouse_move(750, 700)
+    human_like_click()
+
+    #DEAL
+    human_like_mouse_move(1100, 930)
+    human_like_click()
+
 
 def human_like_mouse_move(x, y):
     """Move the mouse to a target (x, y) position with random variations."""
@@ -155,7 +178,7 @@ def human_like_mouse_move(x, y):
     offset_x = random.randint(-10, 10)
     offset_y = random.randint(-10, 10)
 
-    duration = random.uniform(0.5,1.0)
+    duration = random.uniform(1.0,2.0)
 
     # Move with a slight curve or random path
     steps = random.randint(5, 15)  # Number of steps for the movement
@@ -177,7 +200,7 @@ def human_like_click():
     pyautogui.click()
     time.sleep(random.uniform(0.1, 0.3))
 
-# Path to the JSON file
+
 
 
 # Function to read and process the JSON file
@@ -187,7 +210,7 @@ def read_and_process_json():
             data = json.load(json_file)
             move = process_hand_response(data)
             print(move)
-            time.sleep(3)
+            time.sleep(random.uniform(4,5.5))
             if move == "hit":
                 hit()
             elif move == "stand":
@@ -204,26 +227,37 @@ def read_and_process_json():
     except json.JSONDecodeError:
         print("Error: The file does not contain valid JSON.")
 
-# Function to monitor the JSON file for updates
+
 def main():
-    clear_json_file()
-    last_modified_time = None  # Track the last modification time
+    """Wait for the JSON file to update after startup and process it once."""
+    clear_json_file()  # Clear the file at startup
+
+    # Get the modification time when the program starts
+    try:
+        initial_modified_time = os.path.getmtime(json_file_path)
+    except FileNotFoundError:
+        initial_modified_time = None
 
     while True:
         try:
             # Get the current modification time of the file
             current_modified_time = os.path.getmtime(json_file_path)
 
-            # Check if the file has been updated
-            if last_modified_time is None or current_modified_time > last_modified_time:
-                last_modified_time = current_modified_time  # Update the last modification time
-                read_and_process_json()  # Read and process the updated file
+            # If the file is updated after startup, process it once and exit
+            if initial_modified_time is None or current_modified_time > initial_modified_time:
+                read_and_process_json()
+                initial_modified_time = current_modified_time
+
 
         except FileNotFoundError:
             print("Waiting for the JSON file to be created...")
 
-        # Sleep for a short time to prevent high CPU usage
+        # Sleep to prevent high CPU usage
         time.sleep(0.5)
+
+if __name__ == "__main__":
+    main()
+
 
 if __name__ == "__main__":
     main()

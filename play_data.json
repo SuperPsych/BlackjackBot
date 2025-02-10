@@ -1,1 +1,136 @@
-{}
+{
+    "balance": {
+        "before": 2449611,
+        "after": 2449611
+    },
+    "denomination": 1,
+    "available_actions": {
+        "0": "spin"
+    },
+    "macro_round": {
+        "wins": {
+            "total": 0
+        }
+    },
+    "spin": {
+        "bet": 50,
+        "currency": "GC",
+        "timestamp": 1739219848,
+        "situation": 0,
+        "provably_fair": {
+            "hash": "3e81c1c800a5cd69baa28b4a7b892427fbfe82cdbd0caf3408062af9dc4db553"
+        },
+        "wins": {
+            "total": 0
+        },
+        "steps": {
+            "0": "HIT",
+            "1": "STAND"
+        },
+        "dealer": {
+            "status": "PLAY",
+            "cards": {
+                "0": {
+                    "suit": "spades",
+                    "rank": "T"
+                },
+                "1": {
+                    "hole_card": true
+                }
+            },
+            "total_value": 10
+        },
+        "hands": {
+            "0": {
+                "active": false,
+                "seat": 1,
+                "status": "BLACKJACK",
+                "bet": "500.0000",
+                "total_bet": 500,
+                "win": 0,
+                "win_without_bet": 0,
+                "bonus_win": 0,
+                "insurance": -1,
+                "double": 0,
+                "even_money": -1,
+                "split": -1,
+                "soft": false,
+                "soft_value": 11,
+                "hard_value": 21,
+                "total_value": 21,
+                "cards": {
+                    "0": {
+                        "suit": "hearts",
+                        "rank": "A"
+                    },
+                    "1": {
+                        "suit": "hearts",
+                        "rank": "J"
+                    }
+                }
+            },
+            "1": {
+                "active": false,
+                "seat": 2,
+                "status": "BLACKJACK",
+                "bet": "500.0000",
+                "total_bet": 500,
+                "win": 0,
+                "win_without_bet": 0,
+                "bonus_win": 0,
+                "insurance": -1,
+                "double": 0,
+                "even_money": -1,
+                "split": -1,
+                "soft": false,
+                "soft_value": 11,
+                "hard_value": 21,
+                "total_value": 21,
+                "cards": {
+                    "0": {
+                        "suit": "spades",
+                        "rank": "K"
+                    },
+                    "1": {
+                        "suit": "spades",
+                        "rank": "A"
+                    }
+                }
+            },
+            "2": {
+                "active": true,
+                "seat": 3,
+                "status": "PLAY",
+                "bet": "500.0000",
+                "total_bet": 500,
+                "win": 0,
+                "win_without_bet": 0,
+                "bonus_win": 0,
+                "insurance": -1,
+                "double": -1,
+                "even_money": -1,
+                "split": -1,
+                "soft": false,
+                "soft_value": 20,
+                "hard_value": 20,
+                "total_value": 20,
+                "cards": {
+                    "0": {
+                        "suit": "diamonds",
+                        "rank": "8"
+                    },
+                    "1": {
+                        "suit": "diamonds",
+                        "rank": "2"
+                    },
+                    "2": {
+                        "suit": "hearts",
+                        "rank": "K"
+                    }
+                }
+            }
+        },
+        "total_bet": 1500,
+        "total_win": 0
+    }
+}
