@@ -8,6 +8,7 @@ import random
 
 play = None  # Global variable to store the parsed JSON response
 json_file_path = "play_data.json"
+limit = 6000
 
 def clear_json_file():
     with open(json_file_path, "w") as json_file:
@@ -97,6 +98,8 @@ hands = {
 
 def process_hand_response(data):
     """ Processes a single hand and determines the best move. """
+    if data["spin"]["steps"]["0"] == "INSURE":
+        reject_all()
     global spent
     global earned
     action = None
@@ -138,6 +141,9 @@ def process_hand_response(data):
     else:
         spent += data["spin"]["total_bet"]
         earned += data["spin"]["total_win"]
+        print("Spent:", spent)
+        print("Earned:", earned)
+        print()
         reset()
 
 
@@ -157,7 +163,13 @@ def split():
     human_like_mouse_move(1150,930)
     human_like_click()
 
+def reject_all():
+    human_like_mouse_move(1300, 930)
+    human_like_click()
+
 def reset():
+    if spent >= limit:
+        return
     #START
     human_like_mouse_move(1150, 930)
     human_like_click()
@@ -222,11 +234,7 @@ def read_and_process_json():
     try:
         with open(json_file_path, "r") as json_file:
             data = json.load(json_file)
-            move = process_hand_response(data)
-            if data["spin"]["steps"]["0"]=="DEAL":
-                print("Spent:",spent)
-                print("Earned:",earned)
-                print()
+            process_hand_response(data)
             # Add your processing logic here
     except FileNotFoundError:
         print("The file play_data.json was not found.")
@@ -247,7 +255,7 @@ def main():
     except FileNotFoundError:
         initial_modified_time = None
 
-    while True:
+    while spent<limit:
         try:
             # Get the current modification time of the file
             current_modified_time = os.path.getmtime(json_file_path)
@@ -268,5 +276,3 @@ if __name__ == "__main__":
     main()
 
 
-if __name__ == "__main__":
-    main()
