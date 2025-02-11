@@ -3,12 +3,16 @@ import json
 import os
 import pyautogui
 import random
+from humancursor import SystemCursor
+from numpy.ma.core import absolute
 
 # Change this to your preferred log file location
-
+cursor = SystemCursor()
 play = None  # Global variable to store the parsed JSON response
 json_file_path = "play_data.json"
-limit = 6000
+limit = 0.5
+
+dealing = False
 
 def clear_json_file():
     with open(json_file_path, "w") as json_file:
@@ -88,26 +92,21 @@ def optimal_blackjack_action(dealer_value, hard_value, soft_value, can_double, c
 
 
 
-# Initial placeholder hands (to simulate responses)
-hands = {
-    "dealer": None,
-    "player1": None,
-    "player2": None,
-    "player3": None
-}
-
 def process_hand_response(data):
     """ Processes a single hand and determines the best move. """
-    if data["spin"]["steps"]["0"] == "INSURE":
+    if "EVENMONEY" in data["spin"]["steps"].values():
+        time.sleep(random.uniform(4, 5.5))
+        reject_even_money()
+        return
+    if "INSURE" in data["spin"]["steps"].values():
+        time.sleep(random.uniform(4, 5.5))
         reject_all()
+        return
     global spent
     global earned
+    global dealing
     action = None
     dealer_value = data["spin"]["dealer"]["total_value"]
-    hard_value = None
-    soft_value = None
-    can_double = None
-    can_split = None
     hands = data["spin"]["hands"]
     for i in ["0","1","2"]:
         if i in hands:
@@ -129,7 +128,11 @@ def process_hand_response(data):
                 can_split = "SPLIT" in data["spin"]["steps"].values()
                 action = optimal_blackjack_action(dealer_value, hard_value, soft_value, can_double, can_split)
                 break
-    time.sleep(random.uniform(4, 5.5))
+    if dealing:
+        time.sleep(random.uniform(4, 5.5))
+    else:
+        time.sleep(random.uniform(1, 2))
+    dealing = False
     if action == "hit":
         hit()
     elif action == "stand":
@@ -139,6 +142,7 @@ def process_hand_response(data):
     elif action == "split":
         split()
     else:
+        time.sleep(random.uniform(0.5, 1))
         spent += data["spin"]["total_bet"]
         earned += data["spin"]["total_win"]
         print("Spent:", spent)
@@ -148,75 +152,57 @@ def process_hand_response(data):
 
 
 def hit():
-    human_like_mouse_move(850,930)
-    human_like_click()
+    human_action(875,930)
 
 def stand():
-    human_like_mouse_move(1300,930)
-    human_like_click()
+    human_action(1300,930)
 
 def double():
-    human_like_mouse_move(1000,930)
-    human_like_click()
+    human_action(1000,930)
 
 def split():
-    human_like_mouse_move(1150,930)
-    human_like_click()
+    human_action(1150,930)
 
 def reject_all():
-    human_like_mouse_move(1300, 930)
-    human_like_click()
+    human_action(1300, 930)
+
+def reject_even_money():
+    human_action(1150, 930)
 
 def reset():
+    global dealing
+
     if spent >= limit:
         return
-    #START
-    human_like_mouse_move(1150, 930)
-    human_like_click()
 
+    #RESTART
+    human_action(1000, 930)
+
+    dealing = True
+    #START
+    #human_action(1150, 930)
 
     # PICK UP MONEY
-    human_like_mouse_move(1700, 930)
-    human_like_click()
-    # DROP MONEY
-    human_like_mouse_move(1375, 700)
-    human_like_click()
+    #human_action(1700, 930)
 
     # DROP MONEY
-    human_like_mouse_move(1075, 700)
-    human_like_click()
+    #human_action(1375, 700)
 
     # DROP MONEY
-    human_like_mouse_move(750, 700)
-    human_like_click()
+    #human_action(1075, 700)
+
+    # DROP MONEY
+    #human_action(775, 700)
 
     #DEAL
-    human_like_mouse_move(1100, 930)
+    #human_action(1100, 930)
+
+def human_action(x,y):
+    human_like_mouse_move(x, y)
     human_like_click()
 
-
 def human_like_mouse_move(x, y):
-    """Move the mouse to a target (x, y) position with random variations."""
-    # Current mouse position
-    start_x, start_y = pyautogui.position()
-
-    # Random offset to simulate imprecision
-    offset_x = random.randint(-10, 10)
-    offset_y = random.randint(-10, 10)
-
-
-    # Move with a slight curve or random path
-    steps = random.randint(10, 30)  # Number of steps for the movement
-    for i in range(steps):
-        # Interpolate the position
-        new_x = start_x + (x - start_x) * (i / steps) + offset_x * (1 - i / steps)
-        new_y = start_y + (y - start_y) * (i / steps) + offset_y * (1 - i / steps)
-
-        # Move to the intermediate point
-        pyautogui.moveTo(new_x, new_y, duration=random.uniform(0.02, 0.04))
-
-    # Final precise move to the target
-    pyautogui.moveTo(x+random.randint(-5,5), y+random.randint(-5,5), duration=random.uniform(0.1, 0.3))
+    cursor.move_to([x,y])
 
 def human_like_click():
     """Simulate a human-like mouse click."""
