@@ -4,15 +4,14 @@ import os
 import pyautogui
 import random
 from humancursor import SystemCursor
-from numpy.ma.core import absolute
 
 # Change this to your preferred log file location
 cursor = SystemCursor()
 play = None  # Global variable to store the parsed JSON response
 json_file_path = "play_data.json"
-limit = 0.5
+limit = 1000000
 
-dealing = False
+dealing = True
 
 def clear_json_file():
     with open(json_file_path, "w") as json_file:
@@ -21,25 +20,12 @@ def clear_json_file():
 
 
 def optimal_blackjack_action(dealer_value, hard_value, soft_value, can_double, can_split):
-    """
-    Determines the optimal Blackjack action.
-
-    Args:
-    - dealer_value (int): Dealer's upcard value (2 to 11, where 11 is Ace).
-    - hard_value (int): Player's hard hand value (Ace counted as 1).
-    - soft_value (int): Player's soft hand value (Ace counted as 11, or 0 if no soft hand).
-    - can_double (bool): Whether the player can double down.
-    - can_split (bool): Whether the player can split pairs.
-
-    Returns:
-    - str: One of "hit", "stand", "double", or "split".
-    """
-
+    print(hard_value, soft_value)
     # --- 1. Handle Splitting ---
     if can_split:
         # Define optimal splitting strategy based on dealer upcard
         split_rules = {
-            11: "split",  # Always split Aces
+            1: "split",  # Always split Aces
             8: "split",   # Always split 8s
             10: "stand",  # Never split 10s (e.g., 10 + 10)
             9: "split" if dealer_value not in [7, 10, 11] else "stand",
@@ -51,15 +37,20 @@ def optimal_blackjack_action(dealer_value, hard_value, soft_value, can_double, c
             2: "split" if dealer_value <= 7 else "hit"
         }
 
-        pair_value = hard_value // 2  # Pair value, assuming player has a pair (e.g., 8 + 8 = 16)
-        if pair_value in split_rules:
-            return split_rules[pair_value]
+        pair_value = soft_value // 2  # Pair value, assuming player has a pair (e.g., 8 + 8 = 16)
+        return split_rules[pair_value]
 
     # --- 2. Handle Soft Hands ---
-    if soft_value > 0:
+    if soft_value < hard_value:
+        soft_value = hard_value
         # Soft hand strategy (Ace counted as 11)
-        if soft_value >= 19:
+        if soft_value >= 20:
             return "stand"
+        elif soft_value == 19:
+            if dealer_value == 6 and can_double:
+                return "double"
+            else:
+                return "stand"
         elif soft_value == 18:
             if 2 <= dealer_value <= 6:
                 return "double" if can_double else "stand"
@@ -67,8 +58,12 @@ def optimal_blackjack_action(dealer_value, hard_value, soft_value, can_double, c
                 return "hit"
             else:
                 return "stand"
-        else:  # Soft 13 to Soft 17
+        elif soft_value == 17:
             return "double" if 3 <= dealer_value <= 6 and can_double else "hit"
+        elif soft_value == 16 or soft_value == 15:
+            return "double" if 4 <= dealer_value <= 6 and can_double else "hit"
+        else:
+            return "double" if 5 <= dealer_value <= 6 and can_double else "hit"
 
     # --- 3. Handle Hard Hands ---
     if hard_value >= 17:
@@ -100,7 +95,7 @@ def process_hand_response(data):
         return
     if "INSURE" in data["spin"]["steps"].values():
         time.sleep(random.uniform(4, 5.5))
-        reject_all()
+        reject_insurance()
         return
     global spent
     global earned
@@ -112,26 +107,22 @@ def process_hand_response(data):
         if i in hands:
             if type(hands[i]["split"]) != int and hands[i]["split"]["active"]:
                 hard_value = hands[i]["split"]["hard_value"]
-                soft_value = hard_value
-                if hard_value == hands[i]["split"]["soft_value"]:
-                    soft_value = 0
+                soft_value = hands[i]["split"]["soft_value"]
                 can_double = "DOUBLE" in data["spin"]["steps"].values()
                 can_split = "SPLIT" in data["spin"]["steps"].values()
                 action = optimal_blackjack_action(dealer_value, hard_value, soft_value, can_double, can_split)
                 break
             elif hands[i]["active"]:
                 hard_value = hands[i]["hard_value"]
-                soft_value = hard_value
-                if hard_value == hands[i]["soft_value"]:
-                    soft_value = 0
+                soft_value = hands[i]["soft_value"]
                 can_double = "DOUBLE" in data["spin"]["steps"].values()
                 can_split = "SPLIT" in data["spin"]["steps"].values()
                 action = optimal_blackjack_action(dealer_value, hard_value, soft_value, can_double, can_split)
                 break
     if dealing:
-        time.sleep(random.uniform(4, 5.5))
+        time.sleep(random.uniform(4, 4.7))
     else:
-        time.sleep(random.uniform(1, 2))
+        time.sleep(random.uniform(0.4, 0.6))
     dealing = False
     if action == "hit":
         hit()
@@ -142,74 +133,61 @@ def process_hand_response(data):
     elif action == "split":
         split()
     else:
-        time.sleep(random.uniform(0.5, 1))
         spent += data["spin"]["total_bet"]
         earned += data["spin"]["total_win"]
         print("Spent:", spent)
         print("Earned:", earned)
         print()
+        time.sleep(random.uniform(0.3, 0.4))
         reset()
 
 
 def hit():
+    print("Hit.")
     human_action(875,930)
 
 def stand():
+    print("Stand.")
     human_action(1300,930)
 
 def double():
+    print("Double.")
     human_action(1000,930)
 
 def split():
+    print("Split.")
     human_action(1150,930)
 
-def reject_all():
+def reject_insurance():
+    print("Reject insurance.")
     human_action(1300, 930)
 
 def reject_even_money():
+    print("Reject even money.")
     human_action(1150, 930)
 
 def reset():
     global dealing
-
     if spent >= limit:
         return
-
-    #RESTART
     human_action(1000, 930)
-
     dealing = True
-    #START
-    #human_action(1150, 930)
-
-    # PICK UP MONEY
-    #human_action(1700, 930)
-
-    # DROP MONEY
-    #human_action(1375, 700)
-
-    # DROP MONEY
-    #human_action(1075, 700)
-
-    # DROP MONEY
-    #human_action(775, 700)
-
-    #DEAL
-    #human_action(1100, 930)
 
 def human_action(x,y):
     human_like_mouse_move(x, y)
     human_like_click()
 
 def human_like_mouse_move(x, y):
+    x += random.randint(-10,-5)
+    y += random.randint(-10,-5)
     cursor.move_to([x,y])
 
 def human_like_click():
     """Simulate a human-like mouse click."""
     # Simulate a slight delay before and after the click
-    time.sleep(random.uniform(0.2, 0.5))
+    time.sleep(random.uniform(0.1, 0.15))
     pyautogui.mouseDown()
-    time.sleep(random.uniform(0.2, 0.5))
+    time.sleep(random.uniform(0.2, 0.3))
     pyautogui.mouseUp()
 
 
@@ -232,8 +210,7 @@ earned = 0
 
 def main():
     """Wait for the JSON file to update after startup and process it once."""
-
-    clear_json_file()  # Clear the file at startup
+    #clear_json_file()  # Clear the file at startup
 
     # Get the modification time when the program starts
     try:
@@ -256,7 +233,7 @@ def main():
             print("Waiting for the JSON file to be created...")
 
         # Sleep to prevent high CPU usage
-        time.sleep(0.5)
+        time.sleep(0.2)
 
 if __name__ == "__main__":
     main()
