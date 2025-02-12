@@ -1,53 +1,53 @@
 {
     "balance": {
-        "before": 2481726,
-        "after": 2481726
+        "before": 403.52,
+        "after": 403.82
     },
     "denomination": 1,
     "available_actions": {
-        "0": "spin"
+        "0": "deal"
     },
     "macro_round": {
         "wins": {
-            "total": 0
+            "total": 0.3
         }
     },
     "spin": {
-        "bet": 50,
-        "currency": "GC",
-        "timestamp": 1739353677,
+        "bet": 2,
+        "currency": "SC",
+        "timestamp": 1739354672,
         "situation": 0,
         "provably_fair": {
-            "hash": "27c6c6439289ab192832c180b31c54160477836bdef9767aa49cb6faa769f7c1"
+            "hash": "b2fafeed1dd0286a5a0e23e9c260a57f129c69cfec4c6248da43d503ee6796ee",
+            "string": "7H,5H,3S,8S,4D,6C,3C,5C,9H,7D,7S,QH,KS,7D,8S,AH,AD,5S,7C,QS,JD,8D,9C,KC,JC,4S,9H,KC,KS,3D,QD,9S,8H,KH,JS,4S,QS,2C,9H,KS,7C,4S,8S,5S,2C,4C,3S,TH,JH,2C,3C,9S,TC,8C,QH,8H,AD,2S,JC,5H,AS,8S,9S,QS,3H,8H,5S,AD,AS,TC,4H,QD,KC,6S,KC,AH,6C,7C,TD,5D,3D,QS,TD,5H,4D,4H,JS,3C,2H,4C,5S,7H,TH,AC,TD,6H,9C,4D,2H,KC,4S,AD,QH,KD,2S,3H,2S,2S,5D,2H,5S,8D,7H,9C,9D,7D,JD,3D,3D,TH,TS,JH,7S,5H,TH,JC,9C,AS,KD,TC,2D,KH,5D,8D,7D,6D,3H,5D,8D,6D,7S,9D,6C,JS,6C,7H,9C,6D,7H,6C,QC,TC,TH,9S,4H,8H,QH,KH,9D,6S,JC,6S,6H,QH,4S,5C,5H,TH,AD,TD,3H,3S,8H,8S,QC,KH,6H,AH,TD,2H,AC,2S,5C,9D,7S,QD,8S,2D,TS,QD,AH,3S,TC,JC,JS,7H,6C,8C,5D,KS,6D,9D,JS,2C,KH,2D,KS,6S,AS,7S,5C,QC,2D,8C,TD,8C,JH,3D,2D,6H,3C,7C,AC,JS,8D,6S,3S,4C,JH,2S,4H,QH,KC,4C,4D,AC,JD,9H,7D,3D,JC,6D,KD,AS,AH,6H,KD,AC,AC,5C,JD,QC,7C,8H,4D,2H,JH,TC,QC,TS,KS,9D,3C,TS,9H,9C,4H,8C,3S,JD,QS,8D,KH,JD,2C,4S,QS,4D,7D,2D,7C,2H,3H,4H,6D,QD,5S,KD,KD,QD,5D,3C,AD,TS,QC,5C,TS,6S,9H,3H,JH,9S,4C,2C,7S,5H,8C,AS,4C,9S,6H,AH|sduRhVdb9fy0U3LT"
         },
         "wins": {
-            "total": 0
+            "total": 0.3
         },
         "steps": {
-            "0": "HIT",
-            "1": "STAND",
-            "2": "DOUBLE"
+            "0": "DEAL"
         },
         "dealer": {
-            "status": "PLAY",
+            "status": "GAMEOVER",
             "cards": {
                 "0": {
-                    "suit": "clubs",
-                    "rank": "5"
+                    "suit": "hearts",
+                    "rank": "T"
                 },
                 "1": {
-                    "hole_card": true
+                    "suit": "spades",
+                    "rank": "8"
                 }
             },
-            "total_value": 5
+            "total_value": 18
         },
         "hands": {
             "0": {
-                "active": true,
+                "active": false,
                 "seat": 1,
-                "status": "PLAY",
-                "bet": "50.0000",
-                "total_bet": 50,
+                "status": "LOSE",
+                "bet": "0.1000",
+                "total_bet": 0.1,
                 "win": 0,
                 "win_without_bet": 0,
                 "bonus_win": 0,
@@ -56,55 +56,55 @@
                 "even_money": -1,
                 "split": -1,
                 "soft": false,
-                "soft_value": 9,
-                "hard_value": 9,
-                "total_value": 9,
+                "soft_value": 17,
+                "hard_value": 17,
+                "total_value": 17,
                 "cards": {
                     "0": {
                         "suit": "clubs",
-                        "rank": "3"
+                        "rank": "J"
                     },
                     "1": {
-                        "suit": "spades",
-                        "rank": "6"
+                        "suit": "hearts",
+                        "rank": "7"
                     }
                 }
             },
             "1": {
                 "active": false,
                 "seat": 2,
-                "status": "PLAY",
-                "bet": "50.0000",
-                "total_bet": 50,
-                "win": 0,
-                "win_without_bet": 0,
+                "status": "WIN",
+                "bet": "0.1000",
+                "total_bet": 0.1,
+                "win": 0.2,
+                "win_without_bet": 0.1,
                 "bonus_win": 0,
                 "insurance": -1,
                 "double": 0,
                 "even_money": -1,
                 "split": -1,
                 "soft": false,
-                "soft_value": 12,
-                "hard_value": 12,
-                "total_value": 12,
+                "soft_value": 19,
+                "hard_value": 19,
+                "total_value": 19,
                 "cards": {
                     "0": {
-                        "suit": "clubs",
-                        "rank": "4"
+                        "suit": "spades",
+                        "rank": "9"
                     },
                     "1": {
-                        "suit": "diamonds",
-                        "rank": "8"
+                        "suit": "hearts",
+                        "rank": "J"
                     }
                 }
             },
             "2": {
                 "active": false,
                 "seat": 3,
-                "status": "PLAY",
-                "bet": "50.0000",
-                "total_bet": 50,
-                "win": 0,
+                "status": "PUSH",
+                "bet": "0.1000",
+                "total_bet": 0.1,
+                "win": 0.1,
                 "win_without_bet": 0,
                 "bonus_win": 0,
                 "insurance": -1,
@@ -112,22 +112,22 @@
                 "even_money": -1,
                 "split": -1,
                 "soft": false,
-                "soft_value": 9,
-                "hard_value": 9,
-                "total_value": 9,
+                "soft_value": 18,
+                "hard_value": 18,
+                "total_value": 18,
                 "cards": {
                     "0": {
-                        "suit": "hearts",
-                        "rank": "2"
+                        "suit": "diamonds",
+                        "rank": "8"
                     },
                     "1": {
-                        "suit": "clubs",
-                        "rank": "7"
+                        "suit": "diamonds",
+                        "rank": "K"
                     }
                 }
             }
         },
-        "total_bet": 150,
-        "total_win": 0
+        "total_bet": 0.3,
+        "total_win": 0.3
     }
 }
