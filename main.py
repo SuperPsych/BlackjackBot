@@ -144,26 +144,25 @@ def process_hand_response(data):
         spent += data["spin"]["total_bet"]
         earned += data["spin"]["total_win"]
         print("Spent:", spent)
-        print("Earned:", earned)
-        print()
-        time.sleep(random.uniform(0.4, 0.5))
+        print("Earned:", earned,"\n")
+        time.sleep(random.uniform(0.5, 0.6))
         reset()
 
 
 def hit():
-    print("Hit.")
+    print("Hit.\n")
     human_action(875,930)
 
 def stand():
-    print("Stand.")
+    print("Stand.\n")
     human_action(1300,930)
 
 def double():
-    print("Double.")
+    print("Double.\n")
     human_action(1000,930)
 
 def split():
-    print("Split.")
+    print("Split.\n")
     human_action(1150,930)
 
 def blackjack_count(data):
@@ -174,15 +173,15 @@ def blackjack_count(data):
     return count
 
 def reject_all_insurance():
-    print("Reject all insurance.")
+    print("Reject all insurance.\n")
     human_action(1300, 930)
 
 def reject_one_insurance():
-    print("Reject one insurance.")
+    print("Reject one insurance.\n")
     human_action(1150, 930)
 
 def reject_even_money():
-    print("Reject even money.")
+    print("Reject even money.\n")
     human_action(1150, 930)
 
 def reset():
@@ -210,7 +209,7 @@ def human_like_click():
     pyautogui.mouseUp()
 
 def refresh_page():
-    print("Something went wrong. Refreshing page...")
+    print("Something went wrong. Refreshing page...\n")
     pyautogui.press("f5")
 
 
@@ -239,9 +238,14 @@ def main():
     except FileNotFoundError:
         initial_modified_time = None
     tries = 0
+    refreshes = 0
     while spent<limit:
-        if tries > 100:
+        if refreshes > 7:
+            print("Fatal error. Killing bot.")
+            break
+        if tries > random.randint(90,130):
             tries = 0
+            refreshes += 1
             refresh_page()
 
         tries += 1
@@ -252,6 +256,7 @@ def main():
             # If the file is updated after startup, process it once and exit
             if initial_modified_time is None or current_modified_time > initial_modified_time:
                 tries = 0
+                refreshes = 0
                 read_and_process_json()
                 initial_modified_time = current_modified_time
 
