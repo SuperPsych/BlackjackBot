@@ -1,7 +1,7 @@
 # Blackjack Bot by Brendan Malaugh
 
 ## Overview
-This project is a Blackjack bot that interacts with an online game using `mitmproxy` to intercept traffic and `listener.py` to process the game data.
+This project is a Blackjack bot that interacts with an online game using `mitmproxy` to intercept traffic, `listener.py` to process the game data into a JSON, and main.py to automate optimal BlackJack Lucky Sevens play on Modo.us.
 
 ## Installation & Setup
 
