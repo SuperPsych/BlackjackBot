@@ -10,7 +10,7 @@ cursor = SystemCursor()
 play = None  # Global variable to store the parsed JSON response
 json_file_path = "play_data.json"
 limit = 1000000
-
+insurance_rejected = False
 dealing = True
 
 def clear_json_file():
@@ -20,7 +20,6 @@ def clear_json_file():
 
 
 def optimal_blackjack_action(dealer_value, hard_value, soft_value, can_double, can_split):
-    print(hard_value, soft_value)
     # --- 1. Handle Splitting ---
     if can_split:
         # Define optimal splitting strategy based on dealer upcard
@@ -89,13 +88,22 @@ def optimal_blackjack_action(dealer_value, hard_value, soft_value, can_double, c
 
 def process_hand_response(data):
     """ Processes a single hand and determines the best move. """
+    global insurance_rejected
+    if insurance_rejected:
+        if "INSURE" in data["spin"]["steps"].values():
+            return
+        insurance_rejected = False
     if "EVENMONEY" in data["spin"]["steps"].values():
         time.sleep(random.uniform(4, 5.5))
         reject_even_money()
         return
     if "INSURE" in data["spin"]["steps"].values():
         time.sleep(random.uniform(4, 5.5))
-        reject_insurance()
+        insurance_rejected = True
+        if blackjack_count(data)<=1:
+            reject_all_insurance()
+        else:
+            reject_one_insurance()
         return
     global spent
     global earned
@@ -138,7 +146,7 @@ def process_hand_response(data):
         print("Spent:", spent)
         print("Earned:", earned)
         print()
-        time.sleep(random.uniform(0.3, 0.4))
+        time.sleep(random.uniform(0.4, 0.5))
         reset()
 
 
@@ -158,9 +166,20 @@ def split():
     print("Split.")
     human_action(1150,930)
 
-def reject_insurance():
-    print("Reject insurance.")
+def blackjack_count(data):
+    count = 0
+    for i in ["0","1","2"]:
+        if i in data["spin"]["hands"] and data["spin"]["hands"][i]["status"]=="BLACKJACK":
+            count += 1
+    return count
+
+def reject_all_insurance():
+    print("Reject all insurance.")
     human_action(1300, 930)
+
+def reject_one_insurance():
+    print("Reject one insurance.")
+    human_action(1150, 930)
 
 def reject_even_money():
     print("Reject even money.")
@@ -190,7 +209,9 @@ def human_like_click():
     time.sleep(random.uniform(0.2, 0.3))
     pyautogui.mouseUp()
 
-
+def refresh_page():
+    print("Something went wrong. Refreshing page...")
+    pyautogui.press("f5")
 
 
 # Function to read and process the JSON file
@@ -217,14 +238,20 @@ def main():
         initial_modified_time = os.path.getmtime(json_file_path)
     except FileNotFoundError:
         initial_modified_time = None
-
+    tries = 0
     while spent<limit:
+        if tries > 100:
+            tries = 0
+            refresh_page()
+
+        tries += 1
         try:
             # Get the current modification time of the file
             current_modified_time = os.path.getmtime(json_file_path)
 
             # If the file is updated after startup, process it once and exit
             if initial_modified_time is None or current_modified_time > initial_modified_time:
+                tries = 0
                 read_and_process_json()
                 initial_modified_time = current_modified_time
 
