@@ -5,24 +5,17 @@ import pyautogui
 import random
 from humancursor import SystemCursor
 
-# Change this to your preferred log file location
+
 cursor = SystemCursor()
-play = None  # Global variable to store the parsed JSON response
+play = None
 json_file_path = "play_data.json"
 limit = 1000000
-insurance_rejected = False
 dealing = True
-
-def clear_json_file():
-    with open(json_file_path, "w") as json_file:
-        json.dump({}, json_file)  # Empty JSON object (or use [] for an empty list)
-    print("JSON file cleared.")
-
 
 def optimal_blackjack_action(dealer_value, hard_value, soft_value, can_double, can_split):
     # --- 1. Handle Splitting ---
     if can_split:
-        # Define optimal splitting strategy based on dealer upcard
+        # Define optimal splitting strategy based on dealer up-card
         split_rules = {
             1: "split",  # Always split Aces
             8: "split",   # Always split 8s
@@ -30,7 +23,7 @@ def optimal_blackjack_action(dealer_value, hard_value, soft_value, can_double, c
             9: "split" if dealer_value not in [7, 10, 11] else "stand",
             7: "split" if dealer_value <= 7 else "hit",
             6: "split" if dealer_value <= 6 else "hit",
-            5: "double",  # Treat pair of 5s like a hard 10
+            5: "double",  # Treat a pair of 5s like a hard 10
             4: "split" if dealer_value in [5, 6] else "hit",
             3: "split" if dealer_value <= 7 else "hit",
             2: "split" if dealer_value <= 7 else "hit"
@@ -88,22 +81,13 @@ def optimal_blackjack_action(dealer_value, hard_value, soft_value, can_double, c
 
 def process_hand_response(data):
     """ Processes a single hand and determines the best move. """
-    global insurance_rejected
-    if insurance_rejected:
-        if "INSURE" in data["spin"]["steps"].values():
-            return
-        insurance_rejected = False
     if "EVENMONEY" in data["spin"]["steps"].values():
         time.sleep(random.uniform(4, 5.5))
         reject_even_money()
         return
     if "INSURE" in data["spin"]["steps"].values():
         time.sleep(random.uniform(4, 5.5))
-        insurance_rejected = True
-        if blackjack_count(data)<=1:
-            reject_all_insurance()
-        else:
-            reject_one_insurance()
+        reject_insurance()
         return
     global spent
     global earned
@@ -172,11 +156,7 @@ def blackjack_count(data):
             count += 1
     return count
 
-def reject_all_insurance():
-    print("Reject all insurance.\n")
-    human_action(1300, 930)
-
-def reject_one_insurance():
+def reject_insurance():
     print("Reject one insurance.\n")
     human_action(1150, 930)
 
@@ -201,8 +181,6 @@ def human_like_mouse_move(x, y):
     cursor.move_to([x,y])
 
 def human_like_click():
-    """Simulate a human-like mouse click."""
-    # Simulate a slight delay before and after the click
     time.sleep(random.uniform(0.1, 0.15))
     pyautogui.mouseDown()
     time.sleep(random.uniform(0.2, 0.3))
@@ -213,13 +191,11 @@ def refresh_page():
     pyautogui.press("f5")
 
 
-# Function to read and process the JSON file
 def read_and_process_json():
     try:
         with open(json_file_path, "r") as json_file:
             data = json.load(json_file)
             process_hand_response(data)
-            # Add your processing logic here
     except FileNotFoundError:
         print("The file play_data.json was not found.")
     except json.JSONDecodeError:
@@ -229,10 +205,6 @@ spent = 0
 earned = 0
 
 def main():
-    """Wait for the JSON file to update after startup and process it once."""
-    #clear_json_file()  # Clear the file at startup
-
-    # Get the modification time when the program starts
     try:
         initial_modified_time = os.path.getmtime(json_file_path)
     except FileNotFoundError:
@@ -250,21 +222,17 @@ def main():
 
         tries += 1
         try:
-            # Get the current modification time of the file
             current_modified_time = os.path.getmtime(json_file_path)
 
-            # If the file is updated after startup, process it once and exit
             if initial_modified_time is None or current_modified_time > initial_modified_time:
                 tries = 0
                 refreshes = 0
                 read_and_process_json()
                 initial_modified_time = current_modified_time
 
-
         except FileNotFoundError:
             print("Waiting for the JSON file to be created...")
 
-        # Sleep to prevent high CPU usage
         time.sleep(0.2)
 
 if __name__ == "__main__":
