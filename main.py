@@ -1,3 +1,4 @@
+import sys
 import time
 import json
 import os
@@ -209,7 +210,7 @@ def main():
         tries += 1
         try:
             current_modified_time = os.path.getmtime(json_file_path)
-            if current_modified_time > initial_modified_time:
+            if initial_modified_time is None or current_modified_time > initial_modified_time:
                 tries = 0
                 refreshes = 0
                 read_and_process_json()
