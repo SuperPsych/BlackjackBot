@@ -7,10 +7,10 @@ from humancursor import SystemCursor
 
 
 cursor = SystemCursor()
-play = None
 json_file_path = "play_data.json"
 limit = 1000000
 dealing = True
+
 
 def optimal_blackjack_action(dealer_value, hard_value, soft_value, can_double, can_split):
     # --- 1. Handle Splitting ---
@@ -77,8 +77,6 @@ def optimal_blackjack_action(dealer_value, hard_value, soft_value, can_double, c
         return "hit"
 
 
-
-
 def process_hand_response(data):
     """ Processes a single hand and determines the best move. """
     global spent
@@ -110,10 +108,8 @@ def process_hand_response(data):
     dealing = False
     if "EVENMONEY" in data["spin"]["steps"].values():
         reject_even_money()
-        return
-    if "INSURE" in data["spin"]["steps"].values():
+    elif "INSURE" in data["spin"]["steps"].values():
         reject_insurance()
-        return
     if action == "hit":
         hit()
     elif action == "stand":
@@ -147,15 +143,8 @@ def split():
     print("Split.\n")
     human_action(1150,930)
 
-def blackjack_count(data):
-    count = 0
-    for i in ["0","1","2"]:
-        if i in data["spin"]["hands"] and data["spin"]["hands"][i]["status"]=="BLACKJACK":
-            count += 1
-    return count
-
 def reject_insurance():
-    print("Reject one insurance.\n")
+    print("Reject insurance.\n")
     human_action(1150, 930)
 
 def reject_even_money():
@@ -217,20 +206,16 @@ def main():
             tries = 0
             refreshes += 1
             refresh_page()
-
         tries += 1
         try:
             current_modified_time = os.path.getmtime(json_file_path)
-
-            if initial_modified_time is None or current_modified_time > initial_modified_time:
+            if current_modified_time > initial_modified_time:
                 tries = 0
                 refreshes = 0
                 read_and_process_json()
                 initial_modified_time = current_modified_time
-
         except FileNotFoundError:
             print("Waiting for the JSON file to be created...")
-
         time.sleep(0.2)
 
 if __name__ == "__main__":
