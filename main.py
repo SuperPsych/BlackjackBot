@@ -81,14 +81,6 @@ def optimal_blackjack_action(dealer_value, hard_value, soft_value, can_double, c
 
 def process_hand_response(data):
     """ Processes a single hand and determines the best move. """
-    if "EVENMONEY" in data["spin"]["steps"].values():
-        time.sleep(random.uniform(4, 5.5))
-        reject_even_money()
-        return
-    if "INSURE" in data["spin"]["steps"].values():
-        time.sleep(random.uniform(4, 5.5))
-        reject_insurance()
-        return
     global spent
     global earned
     global dealing
@@ -116,6 +108,12 @@ def process_hand_response(data):
     else:
         time.sleep(random.uniform(0.4, 0.6))
     dealing = False
+    if "EVENMONEY" in data["spin"]["steps"].values():
+        reject_even_money()
+        return
+    if "INSURE" in data["spin"]["steps"].values():
+        reject_insurance()
+        return
     if action == "hit":
         hit()
     elif action == "stand":
@@ -129,7 +127,7 @@ def process_hand_response(data):
         earned += data["spin"]["total_win"]
         print("Spent:", spent)
         print("Earned:", earned,"\n")
-        time.sleep(random.uniform(0.5, 0.6))
+        time.sleep(random.uniform(0.6, 0.7))
         reset()
 
 

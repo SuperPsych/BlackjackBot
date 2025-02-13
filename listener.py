@@ -3,7 +3,7 @@ from mitmproxy import http
 import json
 
 # Change this to your preferred log file location
-TARGET_URL = "https://run.steam-powered-games.com/fullstate/html5/evoplay/blackjack/?operator=6227"
+TARGET_URL = "https://run.steam-powered-games.com/fullstate/html5/evoplay/blackjack/?operator=6223"
 
 play = None  # Global variable to store the parsed JSON response
 
