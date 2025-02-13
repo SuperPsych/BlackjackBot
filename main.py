@@ -9,7 +9,7 @@ from humancursor import SystemCursor
 cursor = SystemCursor()
 play = None  # Global variable to store the parsed JSON response
 json_file_path = "play_data.json"
-limit = 1
+limit = 1000000
 insurance_rejected = False
 dealing = True
 
