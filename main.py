@@ -9,7 +9,7 @@ from humancursor import SystemCursor
 
 cursor = SystemCursor()
 json_file_path = "play_data.json"
-limit = 1000000
+limit = 199.9
 dealing = True
 
 
@@ -111,7 +111,7 @@ def process_hand_response(data):
         reject_even_money()
     elif "INSURE" in data["spin"]["steps"].values():
         reject_insurance()
-    if action == "hit":
+    elif action == "hit":
         hit()
     elif action == "stand":
         stand()
