@@ -124,7 +124,7 @@ def process_hand_response(data):
         earned += data["spin"]["total_win"]
         print("Spent:", spent)
         print("Earned:", earned,"\n")
-        time.sleep(random.uniform(0.6, 0.7))
+        time.sleep(random.uniform(0.7, 0.8))
         reset()
 
 
