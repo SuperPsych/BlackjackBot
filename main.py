@@ -9,7 +9,7 @@ from humancursor import SystemCursor
 
 cursor = SystemCursor()
 json_file_path = "play_data.json"
-limit = 1000000
+limit = 163.10-128.75
 dealing = True
 
 
@@ -200,7 +200,7 @@ def main():
     tries = 0
     refreshes = 0
     while spent<limit:
-        if refreshes > 7:
+        if refreshes > 10:
             print("Fatal error. Killing bot.")
             break
         if tries > random.randint(90,130):
