@@ -9,7 +9,7 @@ from humancursor import SystemCursor
 
 cursor = SystemCursor()
 json_file_path = "play_data.json"
-limit = 163.10-128.75
+limit = 159.60-146.80
 dealing = True
 
 
@@ -111,7 +111,7 @@ def process_hand_response(data):
         reject_even_money()
     elif "INSURE" in data["spin"]["steps"].values():
         reject_insurance()
-    if action == "hit":
+    elif action == "hit":
         hit()
     elif action == "stand":
         stand()
@@ -124,7 +124,7 @@ def process_hand_response(data):
         earned += data["spin"]["total_win"]
         print("Spent:", spent)
         print("Earned:", earned,"\n")
-        time.sleep(random.uniform(0.6, 0.7))
+        time.sleep(random.uniform(0.7, 0.8))
         reset()
 
 
@@ -200,7 +200,7 @@ def main():
     tries = 0
     refreshes = 0
     while spent<limit:
-        if refreshes > 10:
+        if refreshes > 7:
             print("Fatal error. Killing bot.")
             break
         if tries > random.randint(90,130):
