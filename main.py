@@ -1,4 +1,3 @@
-import sys
 import time
 import json
 import os
@@ -9,7 +8,7 @@ from humancursor import SystemCursor
 
 cursor = SystemCursor()
 json_file_path = "play_data.json"
-limit = 199.9
+limit = 1000000
 dealing = True
 
 
@@ -124,7 +123,7 @@ def process_hand_response(data):
         earned += data["spin"]["total_win"]
         print("Spent:", spent)
         print("Earned:", earned,"\n")
-        time.sleep(random.uniform(0.7, 0.8))
+        time.sleep(random.uniform(0.8, 0.9))
         reset()
 
 
@@ -203,7 +202,7 @@ def main():
         if refreshes > 7:
             print("Fatal error. Killing bot.")
             break
-        if tries > random.randint(90,130):
+        if tries > random.randint(130,150):
             tries = 0
             refreshes += 1
             refresh_page()
