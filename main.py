@@ -9,7 +9,13 @@ from humancursor import SystemCursor
 
 cursor = SystemCursor()
 json_file_path = "play_data.json"
-limit = 159.60-146.80
+with open("limit.txt", "r") as f:
+    numbers = [int(line.strip()) for line in f]
+if numbers:
+    limit = numbers[0]
+else:
+    print("No limit")
+    sys.exit()
 
 dealing = True
 
