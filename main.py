@@ -1,3 +1,4 @@
+import sys
 import time
 import json
 import os
@@ -8,7 +9,8 @@ from humancursor import SystemCursor
 
 cursor = SystemCursor()
 json_file_path = "play_data.json"
-limit = 1000000
+limit = 159.60-146.80
+
 dealing = True
 
 
