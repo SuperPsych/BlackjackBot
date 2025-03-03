@@ -17,6 +17,7 @@ else:
     print("No limit")
     sys.exit()
 
+print("Limit:",limit)
 dealing = True
 
 
