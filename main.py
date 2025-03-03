@@ -10,7 +10,7 @@ from humancursor import SystemCursor
 cursor = SystemCursor()
 json_file_path = "play_data.json"
 with open("limit.txt", "r") as f:
-    numbers = [int(line.strip()) for line in f]
+    numbers = [float(line.strip()) for line in f]
 if numbers:
     limit = numbers[0]
 else:
