@@ -9,7 +9,7 @@ from humancursor import SystemCursor
 
 cursor = SystemCursor()
 json_file_path = "play_data.json"
-limit = 159.60-146.80
+limit = 374.10-369.30
 dealing = True
 
 
